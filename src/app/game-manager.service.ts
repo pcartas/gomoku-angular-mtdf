@@ -145,8 +145,6 @@ export class GameManagerService {
     if (selectedCell.state == Player.PLAYER_TWO) {
       OpponentCell = this.FirstPlayerCells;
     }
-
-
     var nextCell: CellComponent = new CellComponent(-1, -1);
     switch (direction) {
       // direction one
