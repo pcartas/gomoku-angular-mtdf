@@ -1,9 +1,13 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Inject, Injectable } from '@angular/core';
 import { Player } from '../Player';
 @Component({
   selector: 'app-cell',
   templateUrl: './cell.component.html',
   styleUrls: ['./cell.component.sass']
+})
+
+@Injectable({
+  providedIn: 'any'
 })
 export class CellComponent implements OnInit {
 
@@ -11,7 +15,8 @@ export class CellComponent implements OnInit {
   @Input('row') row: number;
   @Input('column') column: number;
   @Input('state') state: number = 0;
-  constructor(row: number, column: number) { 
+  
+  constructor(@Inject('row') row: number, @Inject('column') column: number) { 
     this.row = row;
     this.column = column;
     this.state = 0;   

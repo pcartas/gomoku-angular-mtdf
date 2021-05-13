@@ -14,14 +14,19 @@ import {
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.sass']
+  styleUrls: ['./dashboard.component.sass'],
+  providers: [
+
+    {provide: 'row', useValue: 'row'},
+    {provide: 'column', useValue: 'column'}
+  ]
 })
 export class DashboardComponent implements OnInit {
   private WIN_CONDITION: number = 5;
   public winner: Player = Player.PLAYER_NONE;
   private FirstPlayerCells: CellComponent[] = [];
   private SecondPlayerCells: CellComponent[] = [];
-  private lastPlayer: Player;
+  public lastPlayer: Player;
   public CurrentPlayer: Player;
   public gameBoard;
   // GameProgress:
@@ -33,8 +38,12 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     // creando tablero de 15x15 donde cada celda es un CellComponent
-    this.gameBoard = () => {
-      var size = 15;
+    this.gameBoard = this.newGameState();
+    this.CurrentPlayer = Player.PLAYER_ONE;
+  }
+
+  newGameState(): any{
+    var size = 15;
       let newGameState: CellComponent[][] = [];
       for (var i: number = 0; i < size; i++) {
         newGameState[i] = [];
@@ -43,22 +52,23 @@ export class DashboardComponent implements OnInit {
         }
       }
       return newGameState;
-    }
   }
 
   selectCell(i: number, j: number) {
     if (this.onGoing == false) {
       return null;
     }
-    //console.log("Cell ["+i+","+j+"] has been selected" );
+    console.log("Cell ["+i+","+j+"] has been selected" );
     var selectedCell: CellComponent = this.findCorrectCell(i, j);
-    //    console.log(selectedCell)
+      // console.log(selectedCell);
+       //console.log(this.CurrentPlayer)
     // Make the decision
 
     // Si es el turno de player 1 setea que la casilla es de player1 (x)
     if (this.CurrentPlayer == Player.PLAYER_ONE && this.gameBoard[i][j].state == 0) {
       this.gameBoard[i][j].state = this.CurrentPlayer;
       selectedCell.changeState(this.CurrentPlayer);
+     // console.log(selectedCell);
 
       // assert winner
       let newCell: CellComponent = new CellComponent(i, j);
