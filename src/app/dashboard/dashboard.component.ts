@@ -124,7 +124,7 @@ export class DashboardComponent implements OnInit {
 
       // Evaluate
       this.lastPlayer = Player.PLAYER_ONE;
-      var winYet = this.assertPlayerTable(this.FirstPlayerCells);
+      var winYet = this.findWinningSegment(cell, this.FirstPlayerCells);
       console.log("Player 1 just make move " + cell.row + ";" + cell.column + " Win?: " + winYet);
 
       if (winYet == true) {
@@ -135,7 +135,7 @@ export class DashboardComponent implements OnInit {
 
       // Evaluate
       this.lastPlayer = Player.PLAYER_TWO;
-      var winYet = this.assertPlayerTable(this.SecondPlayerCells);
+      var winYet = this.findWinningSegment(cell, this.SecondPlayerCells);
 
       console.log("Player 2 just make move " + cell.row + ";" + cell.column + " Win?: " + winYet);
 
@@ -150,19 +150,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  // This function take all input of one player's move and evaluate his winning state
-  assertPlayerTable(PlayerCells: CellComponent[]): boolean {
-    // console.log("All Cell made by player " + PlayerCells[0].state + " is:");
-    // console.log(PlayerCells)
-    var flag = false;
-    PlayerCells.some((cell) => {
-      if (this.findWinningSegment(cell, PlayerCells) == true) {
-        flag = true;
-      }
-    })
-    //default: return false
-    return flag;
-  }
 
   findWinningSegment(selectedCell: CellComponent, otherCells: CellComponent[]): boolean {
     // console.log("Finding Winning Segment for :")
@@ -177,6 +164,12 @@ export class DashboardComponent implements OnInit {
       new CellComponent(-1, -1), new CellComponent(-1, -1),
       new CellComponent(-1, -1), new CellComponent(-1, -1)
     ]
+    var allDirections = [
+      [0, 4],
+      [1, 5],
+      [2, 6],
+      [3, 7]
+    ];
 
     // These two below number should be fixed
     var selectedRow = selectedCell.row;
@@ -234,28 +227,27 @@ export class DashboardComponent implements OnInit {
       }
     })
 
-    for (var i = 0; i < 8; i++) {
-      if (possibleCandidates[i].row != -1) {
+    for (var i = 0; i < allDirections.length; i++) {
+
+      if (possibleCandidates[allDirections[i][0]].row != -1 || possibleCandidates[allDirections[i][1]].row != -1) {
         // If the placeholder of matching candidates is not null => have matche value
         var counter = 1;
         // Begin counter;
-        var direction = i;
         // initialize second matched cell for the winning segment
-        var nextCell = possibleCandidates[i];
-        // console.log("Possible Candidates: on direction " + i +" From cell of row"
-        // 	    + selectedCell.row + " column: " + selectedCell.column);
+        var nextCell = possibleCandidates[allDirections[i][0]];
+        var nextCellPlus = possibleCandidates[allDirections[i][1]]
 
-        // console.log("Counter " + counter + "Current Cell");
-        // console.log(nextCell);
         while (nextCell != null && nextCell.state == selectedCell.state) {
           counter = counter + 1;
-          nextCell = this.nextCellMatchResult(nextCell, direction, otherCells);
-
-          // console.log("Counter " + counter + "Current Cell");	  
-          // console.log(nextCell);
+          nextCell = this.nextCellMatchResult(nextCell, allDirections[i][0], otherCells);
         };
 
-        if (counter >= this.WIN_CONDITION && nextCell == null) {
+        while (nextCellPlus != null && nextCellPlus.state == selectedCell.state) {
+          counter = counter + 1;
+          nextCellPlus = this.nextCellMatchResult(nextCellPlus, allDirections[i][1], otherCells);
+        };
+
+        if (counter >= this.WIN_CONDITION) {
           // Counter reaches requires limit and nextcell.state is not belong to opponent
           //  console.log("VICTORY FOR YOU!!!!")
           return true
