@@ -1,7 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChildren,
+import { Component, OnInit, ViewChildren,
   QueryList
 } from '@angular/core';
 import {
@@ -11,17 +8,27 @@ import {
   Player
 } from '../Player';
 
+
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.sass'],
   providers: [
 
-    {provide: 'row', useValue: 'row'},
-    {provide: 'column', useValue: 'column'}
+    {
+      provide: 'row',
+      useValue: 'row'
+    },
+    {
+      provide: 'column',
+      useValue: 'column'
+    }
   ]
 })
 export class DashboardComponent implements OnInit {
+  // The worker that im gonna use to interact with the AI
+  public aiWorker: any;
   private WIN_CONDITION: number = 5;
   public winner: Player = Player.PLAYER_NONE;
   private FirstPlayerCells: CellComponent[] = [];
@@ -29,72 +36,96 @@ export class DashboardComponent implements OnInit {
   public lastPlayer: Player;
   public CurrentPlayer: Player;
   public gameBoard;
+  public Board = [];
   // GameProgress:
   public onGoing: boolean = true;
   // ViewChild to query Cell 
   @ViewChildren(CellComponent) allCells: QueryList < CellComponent > ;
 
-  constructor() {}
+  constructor() {
+    this.initializeWebWorker();
+  }
 
   ngOnInit(): void {
-    // creando tablero de 15x15 donde cada celda es un CellComponent
+    // Making up a 15x15 dashboard where each cell is a CellComponent
     this.gameBoard = this.newGameState();
     this.CurrentPlayer = Player.PLAYER_ONE;
   }
 
-  newGameState(): any{
-    var size = 15;
-      let newGameState: CellComponent[][] = [];
-      for (var i: number = 0; i < size; i++) {
-        newGameState[i] = [];
-        for (var j: number = 0; j < size; j++) {
-          newGameState[i][j] = new CellComponent(i, j);
-        }
+  initializeWebWorker(){
+    if (typeof Worker !== 'undefined'){
+      if (!this.aiWorker){
+        this.aiWorker = new Worker('../../assets/mtdf(10).worker.js', {type: "module"})
       }
-      return newGameState;
+    }
+  }
+  
+  aiWorkerPost(){
+    // this.aiWorker.onmessage = function(e) {
+    //   console.log(e.data.bestmove);
+    //   console.log(`Cache Hits: ${e.data.CacheHits}`)
+    //   console.log(`Cache Cutoffs: ${e.data.CacheCutoffs}`)
+    //   console.log(`Cache Puts: ${e.data.CachePuts}`)
+    //   console.log(`function calls ${e.data.fc}`)
+    //   console.log(`Call to iterative mtdf took ${e.data.time} seconds.`)
+    //   console.log(`StateCacheHits: ${e.data.StateCacheHits}`)
+    //   console.log(`StateCachePuts: ${e.data.StateCachePuts}`)
+    //   console.log(e.data.firstMoves)
+    //   }
+    var MaximumTimeForMove = 6;
+    this.aiWorker.postMessage([this.Board, -1, MaximumTimeForMove]);
+    this.aiWorker.addEventListener('message', ({data}) => {
+      this.selectCell(data.firstMoves[0].i, data.firstMoves[0].j)
+    });
+  }
+
+  newGameState(): any {
+    var size = 15;
+    let newGameState: CellComponent[][] = [];
+    for (var i: number = 0; i < size; i++) {
+      newGameState[i] = [];
+      this.Board[i] = [];
+      for (var j: number = 0; j < size; j++) {
+        newGameState[i][j] = new CellComponent(i, j);
+        this.Board[i][j] = newGameState[i][j].state;
+      }
+    }
+    return newGameState;
   }
 
   selectCell(i: number, j: number) {
     if (this.onGoing == false) {
       return null;
     }
-    console.log("Cell ["+i+","+j+"] has been selected" );
+    //console.log("Cell ["+i+","+j+"] has been selected" );
     var selectedCell: CellComponent = this.findCorrectCell(i, j);
-      // console.log(selectedCell);
-       //console.log(this.CurrentPlayer)
+    // console.log(selectedCell);
+    //console.log(this.CurrentPlayer)
     // Make the decision
 
     // Si es el turno de player 1 setea que la casilla es de player1 (x)
-    if (this.CurrentPlayer == Player.PLAYER_ONE && this.gameBoard[i][j].state == 0) {
+    if (this.CurrentPlayer !== Player.PLAYER_NONE && this.gameBoard[i][j].state == 0) {
       this.gameBoard[i][j].state = this.CurrentPlayer;
+      this.Board[i][j] = this.CurrentPlayer;
       selectedCell.changeState(this.CurrentPlayer);
-     // console.log(selectedCell);
+      // console.log(selectedCell);
 
       // assert winner
       let newCell: CellComponent = new CellComponent(i, j);
       newCell.state = this.CurrentPlayer;
       this.winner = this.addCell(newCell);
-
 
       // Swap Player's turn
-      this.CurrentPlayer = Player.PLAYER_TWO;
+      this.swapPlayers();
 
-    } else if (this.CurrentPlayer == Player.PLAYER_TWO && this.gameBoard[i][j].state == 0) {
-      this.gameBoard[i][j].state = this.CurrentPlayer;
-      selectedCell.changeState(this.CurrentPlayer);
-
-      // assert winner
-      let newCell: CellComponent = new CellComponent(i, j);
-      newCell.state = this.CurrentPlayer;
-      this.winner = this.addCell(newCell);
-
-      //Swap Player Turn
-      this.CurrentPlayer = Player.PLAYER_ONE;
-
+      if(this.CurrentPlayer == Player.PLAYER_TWO){
+        this.aiWorkerPost();
+      }
 
     } else {
       // Nothing happend
       //console.log("INVALID MOVE");
+      // show a cartelito :v
 
     }
 
@@ -104,14 +135,20 @@ export class DashboardComponent implements OnInit {
       // First Player Victory
       this.onGoing = false;
       // Mostrar Popup de Player1 Victory
-    } else if (this.winner == 2) {
+    } else if (this.winner == -1) {
       this.onGoing = false;
       // Mostrar Popup de Perdiste o algo asi 
     }
 
   }
 
-
+  swapPlayers(){
+    if (this.CurrentPlayer == Player.PLAYER_ONE){
+      this.CurrentPlayer = Player.PLAYER_TWO;
+    } else {
+      this.CurrentPlayer = Player.PLAYER_ONE;
+    }
+  }
 
   findCorrectCell(i: number, j: number): CellComponent {
     for (var cell of this.allCells.toArray()) {
@@ -150,7 +187,7 @@ export class DashboardComponent implements OnInit {
       console.log("Player 2 just make move " + cell.row + ";" + cell.column + " Win?: " + winYet);
 
       if (winYet == true) {
-        return 2;
+        return -1;
       }
 
     } else {
@@ -356,4 +393,16 @@ export class DashboardComponent implements OnInit {
   }
 
 
+}
+
+if (typeof Worker !== 'undefined') {
+  // Create a new
+  const worker = new Worker('./dashboard.worker', { type: 'module' });
+  worker.onmessage = ({ data }) => {
+    console.log(`page got message: ${data}`);
+  };
+  worker.postMessage('hello');
+} else {
+  // Web Workers are not supported in this environment.
+  // You should add a fallback so that your program still executes correctly.
 }
