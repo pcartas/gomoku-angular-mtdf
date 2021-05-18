@@ -72,15 +72,16 @@ export class DashboardComponent implements OnInit {
     //   console.log(`StateCachePuts: ${e.data.StateCachePuts}`)
     //   console.log(e.data.firstMoves)
     //   }
-    var MaximumTimeForMove = 6;
+    var MaximumTimeForMove = 60;
     this.aiWorker.postMessage([this.Board, -1, MaximumTimeForMove]);
     this.aiWorker.addEventListener('message', ({data}) => {
-      this.selectCell(data.firstMoves[0].i, data.firstMoves[0].j)
+      console.log(data);
+      this.selectCell(data.bestmove.i, data.bestmove.j)
     });
   }
 
   newGameState(): any {
-    var size = 15;
+    var size = 13;
     let newGameState: CellComponent[][] = [];
     for (var i: number = 0; i < size; i++) {
       newGameState[i] = [];
