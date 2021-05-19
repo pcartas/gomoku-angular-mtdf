@@ -1,3 +1,4 @@
+
 import {
   Component,
   OnInit,
@@ -75,7 +76,7 @@ export class DashboardComponent implements OnInit {
       data
     }) => {
       this.selectCell(data.bestmove.i, data.bestmove.j);
-    });
+    }, {once: true});
   }
 
   newGameState(): any {
@@ -409,6 +410,16 @@ export class DashboardComponent implements OnInit {
   push(selectedCell: any) {
     this.stack[this.count] = selectedCell;
     this.count++;
+  }
+
+  idea(){
+    var MaximumTimeForMove = 100;
+    this.aiWorker.postMessage([this.Board, 1, MaximumTimeForMove]);
+    this.aiWorker.addEventListener('message', ({data}) => {
+      var cell = document.getElementById(data.bestmove.i+"_"+data.bestmove.j).getElementsByClassName("cell")[0];
+      cell.classList.add("idea");
+      setTimeout(function(){cell.classList.remove("idea")}, 700)
+    }, {once: true});
   }
 
   printAll() {
