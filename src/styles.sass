@@ -1,10 +1,96 @@
 /* You can add global styles to this file, and also import other style files */
-html 
+
+$xubio-primary-blue: #004874 !default
+$xubio-primary-light-green: #71E247 !default
+$xubio-primary-light-blue: #0075B0 !default
+$xubio-extended-light-blue-1: #00AFD3 !default
+$xubio-extended-light-blue-2: #006D7C !default
+$xubio-extended-light-green: #52AE32 !default
+$xubio-extended-green: #336620 !default
+$xubio-extended-dark-blue: #0F3547 !default
+
+$xubio-primary-help: #D24379 !default
+$xubio-secondary-help: #7F2D4E !default
+
+$xubio-background-grey: #EFF3F4 !default
+$xubio-white: #FFFFFF !default //cmon just white
+$xubio-footer-grey: #E2E2E2 !default
+
+$xubio-primary-text: #191D1E !default
+$xubio-secondary-text: #4D575B !default
+
+$xubio-red-error: #DB2A2A !default
+$xubio-orange-warning: #DB7F2A !default
+$xubio-green-success: #52AE32 !default
+$xubio-yellow-info: #DBCE2A !default
+
+$xubio-gradient-1: linear-gradient(331.7deg, #004874 35%, #00AFD3 88.87%)
+$xubio-gradient-2: linear-gradient(45deg, #0F3547 15.51%, #004874 84.49%)
+
+$colors: ("blue": $xubio-primary-blue, "purple": $xubio-secondary-help, "pink": $xubio-primary-help, "red": $xubio-red-error, "orange": $xubio-orange-warning, "yellow": $xubio-yellow-info,"green": $xubio-primary-light-green, "cyan": $xubio-extended-light-blue-1, "white": $xubio-white, "gray": $xubio-secondary-text, "gray-dark":  $xubio-primary-text) !default
+// scss-docs-end colors-map
+
+// scss-docs-start theme-color-variables
+$primary:       $xubio-primary-blue !default
+$secondary:     $xubio-primary-light-green !default
+$success:       $xubio-green-success !default
+$info:          $xubio-yellow-info !default
+$warning:       $xubio-orange-warning !default
+$danger:        $xubio-red-error !default
+$light:         $xubio-white !default
+$dark:          $xubio-primary-text !default
+// scss-docs-end theme-color-variables
+
+// scss-docs-start theme-colors-map
+$theme-colors: ("primary": $primary, "secondary":  $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark) !default
+
+html
     height: 100%,
 
-body 
+body
     margin: 0
-    font-family: Roboto, "Helvetica Neue", sans-serif,
+    font-family: Circe, Open Sans, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     height: 100%
-    background-color: #212121
+    background-color: $xubio-background-grey,
 
+// Text
+.text-xubio
+    color: $light,
+
+
+// Dashboard
+.table-panel
+    margin-top: 3rem,
+
+.numberGrid
+    height: 2rem,
+    width: 2rem,
+    background-color: $dark,
+    color: $light,
+    float: left,
+    margin: 0 2px 2px 0,
+    text-align: center,
+p
+  margin-top: 0.5rem !important,
+
+.cell
+    height: 2rem,
+    width: 2rem,
+    background: $xubio-gradient-1,
+    float: left,
+    margin: 0 2px 2px 0,
+
+.cell:hover
+        background: $xubio-gradient-2,
+
+button
+  height: 37px,
+  width: 73px,
+  left: 0px,
+  top: 0px,
+  border-radius: 4px,
+  color: $light,
+  background: $xubio-gradient-1,
+
+button:hover
+  background: $xubio-gradient-2,

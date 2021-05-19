@@ -1,0 +1,40 @@
+<div fxLayout="row" fxLayoutAlign="space-around center">
+  <div class="mt-2" fxLayout="column" fxLayoutAlign="center center">
+    <div fxLayout="row">
+      <div *ngFor="let row of this.gameBoard; let i = index">
+        <div class="numberGrid">
+          <p>{{i+1}}</p>
+        </div>
+      </div>
+    </div>
+    <div class="table-panel m-0 p-0">
+      <div fxLayout="row" fxLayoutAlign="center center" *ngFor="let row of this.gameBoard; let i = index">
+        <div class="numberGrid">
+          <p>{{i+1}}</p>
+        </div>
+        <app-cell *ngFor="let column of row; let j = index" [row]="i" [column]="j" (click)="selectCell(i,j)"
+          id="{{i}}_{{j}}" #cell>
+        </app-cell>
+        <div class="numberGrid">
+          <p>{{i+1}}</p>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row">
+      <div *ngFor="let row of this.gameBoard; let i = index">
+        <div class="numberGrid">
+          <p>{{i+1}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--BUTTON SECTION -->
+
+  <div class="mt-2" fxLayout="column" >
+    <button (click)="restart()">Restart</button>
+    <button (click)="undo(); undo()">Undo</button>
+    <button>Redo</button>
+    <button (click)="printAll()">PrintAll</button>
+  </div>
+</div>

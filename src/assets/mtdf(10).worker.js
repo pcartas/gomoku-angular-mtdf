@@ -500,10 +500,9 @@ function TIMEOUT() {
 }
 
 function iterative_mtdf(Board) {
-    console.log("2 on interactive")
     const restrictions = Get_restrictions(Board)
     let guess = evaluate_state(Board, 1, hash(GameBoard), [0, 0, Rows - 1, Columns - 1])
-    console.log(`Guess for best score: ${guess}`)
+    //console.log(`Guess for best score: ${guess}`)
     bestmoves = BoardGenerator(restrictions, Board, 1);
     let move;
     let depth = 2;
@@ -515,10 +514,10 @@ function iterative_mtdf(Board) {
         }
         move = temp;
         Set_last_best(move);
-        console.log(depth)
-        console.log(move)
+        //console.log(depth)
+        //console.log(move)
         const t11 = Date.now();
-        console.log((t11 - startTime) / 1000)
+        //console.log((t11 - startTime) / 1000)
         if (Math.abs(move.score) > 1999900) {
             return move
         }
@@ -533,7 +532,7 @@ function negamax(newBoard, player, depth, a, b, hash, restrictions, last_i, last
         return 1
     }
     const alphaOrig = a;
-    const CacheNode =Cache.get(hash)  
+    const CacheNode =Cache.get(hash)
     if ((CacheNode!== undefined) && (CacheNode.depth >= depth)) {
         CacheHits++;
         const score = CacheNode.score;
@@ -633,7 +632,6 @@ let startTime;
 function search() {
     startTime = Date.now();
     const t0 = performance.now();
-    console.log("Search function 1 before interactive_mtdf");
     const bestmove = iterative_mtdf(GameBoard);
     const t1 = performance.now();
     Cache.clear()
@@ -652,14 +650,12 @@ function search() {
 }
 onmessage = function(e) {
     const Board = e.data[0];
-    console.log("algo");
-    console.log(Board);
     // const Turn = e.data[1]
     MaximumTimeForMove = e.data[2]
     // console.log(e.data)
     if (Board) {
         GameBoard = Board;
-        console.log(GameBoard);
+        //console.log(GameBoard);
         Rows = GameBoard.length;
         Columns = GameBoard[0].length
         let sum = 0;
