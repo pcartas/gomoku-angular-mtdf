@@ -1,4 +1,17 @@
+
+  <!--BUTTON SECTION -->
+
+  <div class="mt-2" fxLayout="row" fxLayoutAlign="start start"  >
+    <button class="thirdButton" (click)="restart()">Restart</button>
+    <button class="thirdButton" (click)="undo(); undo()">Undo</button>
+    <button class="thirdButton" >Redo</button>
+    <!-- <button (click)="printAll()">PrintAll</button> -->
+    <button class="infoButton" (click)="idea()"><span class="material-icons text-white"> wb_incandescent</span></button>
+  </div>
 <div fxLayout="row" fxLayoutAlign="space-around center">
+
+
+  <!-- DASHBOARD SECTION -->
   <div class="mt-2" fxLayout="column" fxLayoutAlign="center center">
     <div fxLayout="row">
       <div *ngFor="let row of this.gameBoard; let i = index">
@@ -29,15 +42,5 @@
     </div>
   </div>
 
-  <!--BUTTON SECTION -->
 
-  <div class="mt-2" fxLayout="column" >
-    <button (click)="restart()">Restart</button>
-    <button (click)="undo(); undo()">Undo</button>
-    <button>Redo</button>
-    <!-- <button (click)="printAll()">PrintAll</button> -->
-    <button (click)="idea()"><span class="material-icons">
-      wb_incandescent
-      </span></button>
-  </div>
 </div>

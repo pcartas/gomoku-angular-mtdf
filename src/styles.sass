@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css"
 
 $xubio-primary-blue: #004874 !default
 $xubio-primary-light-green: #71E247 !default
@@ -26,7 +27,9 @@ $xubio-yellow-info: #DBCE2A !default
 
 $xubio-gradient-1: linear-gradient(331.7deg, #004874 35%, #00AFD3 88.87%)
 $xubio-gradient-2: linear-gradient(45deg, #0F3547 15.51%, #004874 84.49%)
-
+$xubio-gradient-3: linear-gradient(to bottom, #00abeb 0%,#027cd8 100%)
+$xubio-gradient-4: linear-gradient(to bottom, #007dbf 0%,#174db1 100%)
+$xubio-gradient-pink: linear-gradient(to bottom, $xubio-primary-help 0%, $xubio-secondary-help 100%)
 $colors: ("blue": $xubio-primary-blue, "purple": $xubio-secondary-help, "pink": $xubio-primary-help, "red": $xubio-red-error, "orange": $xubio-orange-warning, "yellow": $xubio-yellow-info,"green": $xubio-primary-light-green, "cyan": $xubio-extended-light-blue-1, "white": $xubio-white, "gray": $xubio-secondary-text, "gray-dark":  $xubio-primary-text) !default
 // scss-docs-end colors-map
 
@@ -43,6 +46,111 @@ $dark:          $xubio-primary-text !default
 
 // scss-docs-start theme-colors-map
 $theme-colors: ("primary": $primary, "secondary":  $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark) !default
+
+button
+  height: 37px,
+  padding: 4px 12px 4px 12px,
+  border-radius: 4px,
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25)
+
+
+.primaryButton
+    color: $light,
+    background: $xubio-gradient-1,
+    border: 0px !important,
+    font-weight: 600
+
+.primaryButton:hover
+  background: $xubio-gradient-2,
+
+
+.secondaryButton
+    margin-left: 10px,
+    color: $xubio-primary-blue,
+    background: $xubio-white,
+    border: 0.5px solid $xubio-primary-blue,
+    box-sizing: border-box,
+    border-radius: 4px
+
+.secondaryButton:hover
+    background: $xubio-background-grey
+
+.thirdButton
+    margin-left: 10px
+    color: $light,
+    background: $xubio-gradient-3,
+    border: 1px solid #00abeb !important,
+    font-weight: 700,
+    border-radius: 4px,
+    font-size: 14px
+
+.thirdButton:hover
+  border: 1px solid #027cd8 !important,
+  background: #027cd8
+
+.infoButton
+    color: $xubio-white
+    border: none !important,
+    margin-left: 10px
+    background: $xubio-gradient-pink
+
+.infoButton:hover
+    background: $xubio-secondary-help
+
+.xubio-text-success
+  color: $xubio-primary-light-green
+
+.xubio-text-warning
+  color: $xubio-orange-warning
+
+.xubio-text-danger
+  color: $xubio-red-error
+
+.xubio-dialog-title
+    font-family: "Open Sans",
+    font-size: 20px !important
+    font-style: normal !important
+    font-weight: 600
+    line-height: 27px
+    letter-spacing: 0em
+    text-align: left
+
+.xubio-dialog-message
+    font-family: Open Sans
+    font-size: 14px !important
+    font-style: normal !important
+    font-weight: 400
+    line-height: 19px !important
+    letter-spacing: 0em
+    text-align: left
+
+.xubio-banner
+    background: url('./assets/header_back.png') no-repeat center 0
+    background-position: -810px 0
+    // width: 980px !important
+    height: 83px
+
+.xubio-header-menu
+    height: 30px
+    width: 100%
+    border: none
+    padding: 0
+    background: $xubio-primary-light-blue
+
+
+.xubio-header-menu-text
+    text: $xubio-white
+    font-weight: 600
+    font-size: 14px
+    padding: 5px 14px 6px 14px
+
+.xubio-logo
+    background: url('./assets/logo_xubio_2017.png')
+    height: 31px
+    width: 119px
+    text-indent: -1000px
+    margin: 11px
+
 
 html
     height: 100%,
@@ -65,39 +173,27 @@ body
 .numberGrid
     height: 2rem,
     width: 2rem,
-    background-color: $dark,
+    background-color: $xubio-primary-light-blue,
     color: $light,
     float: left,
     margin: 0 2px 2px 0,
     text-align: center,
+    font-weight: 600
+    border-radius: 4px
 p
   margin-top: 0.5rem !important,
 
 .cell
     height: 2rem,
     width: 2rem,
-    background: $xubio-gradient-1,
     float: left,
     margin: 0 2px 2px 0,
 
 .cell:hover
-        background: $xubio-gradient-2,
-
-button
-  height: 37px,
-  width: 73px,
-  left: 0px,
-  top: 0px,
-  border-radius: 4px,
-  color: $light,
-  background: $xubio-gradient-1,
-
-button:hover
-  background: $xubio-gradient-2,
-
+        background: $xubio-background-grey
 
 .idea
-  background: $xubio-orange-warning
+  background: $xubio-primary-help
 
 
 

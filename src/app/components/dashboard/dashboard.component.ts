@@ -1,35 +1,25 @@
+import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 
-import {
-  Component,
-  OnInit,
-  ViewChildren,
-  QueryList
-} from '@angular/core';
-
-import {
-  CellComponent
-} from '../cell/cell.component';
-import {
-  Player
-} from '../../player_enum';
-
-
+import { CellComponent } from '../cell/cell.component';
+import { Player } from '../../player_enum';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { DialogComponent } from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.sass'],
   providers: [
-
     {
       provide: 'row',
-      useValue: 'row'
+      useValue: 'row',
     },
     {
       provide: 'column',
-      useValue: 'column'
-    }
-  ]
+      useValue: 'column',
+    },
+  ],
 })
 export class DashboardComponent implements OnInit {
   // The worker that im gonna use to interact with the AI
@@ -48,36 +38,18 @@ export class DashboardComponent implements OnInit {
   // GameProgress:
   public onGoing: boolean = true;
   // ViewChild to query Cell
-  @ViewChildren(CellComponent) allCells: QueryList < CellComponent > ;
+  @ViewChildren(CellComponent) allCells: QueryList<CellComponent>;
 
-  constructor() {}
+  constructor(private dialogRef: MatDialog) {}
 
   ngOnInit(): void {
-
     this.gameBoard = this.newGameState();
     this.CurrentPlayer = Player.PLAYER_ONE;
     this.initializeWebWorker();
   }
 
-  initializeWebWorker() {
-    if (typeof Worker !== 'undefined') {
-      if (!this.aiWorker) {
-        this.aiWorker = new Worker('../../../assets/mtdf(10).worker.js', {
-          type: "module"
-        })
-      }
-    }
-  }
 
-  aiWorkerPost() {
-    var MaximumTimeForMove = 100;
-    this.aiWorker.postMessage([this.Board, -1, MaximumTimeForMove]);
-    this.aiWorker.addEventListener('message', ({
-      data
-    }) => {
-      this.selectCell(data.bestmove.i, data.bestmove.j);
-    }, {once: true});
-  }
+  //DASHBOARD FUNCTIONS
 
   newGameState(): any {
     // Making up a 15x15 dashboard where each cell is a CellComponent
@@ -99,17 +71,12 @@ export class DashboardComponent implements OnInit {
       return null;
     }
     var selectedCell: CellComponent = this.findCorrectCell(i, j);
-    // Make the decision
 
-    // Si es el turno de player 1 setea que la casilla es de player1 (x)
     if (this.CurrentPlayer !== Player.PLAYER_NONE && this.gameBoard[i][j].state == 0) {
       this.gameBoard[i][j].state = this.CurrentPlayer;
       this.Board[i][j] = this.CurrentPlayer;
       selectedCell.changeState(this.CurrentPlayer);
-      this.push({
-        i,
-        j
-      });
+      this.push({i, j,});
 
       // assert winner
       let newCell: CellComponent = new CellComponent(i, j);
@@ -124,21 +91,18 @@ export class DashboardComponent implements OnInit {
       }
     } else {
       // Nothing happend
-      //console.log("INVALID MOVE");
-      // show a cartelito :v
+      this.openInvalidMoveDialog();
     }
 
     if (this.winner == 0) {
       // nothing happend
     } else if (this.winner == 1) {
-      // First Player Victory
       this.onGoing = false;
-      // Mostrar Popup de Player1 Victory
+      this.openYouWinDialog();
     } else if (this.winner == -1) {
       this.onGoing = false;
-      // Mostrar Popup de Perdiste o algo asi
+      this.openYouLooseDialog();
     }
-
   }
 
   swapPlayers() {
@@ -181,118 +145,156 @@ export class DashboardComponent implements OnInit {
       if (winYet == true) {
         return -1;
       }
-
     } else {
       //do nothing
       return 0;
-
     }
   }
 
-
   findWinningSegment(selectedCell: CellComponent, otherCells: CellComponent[]): boolean {
     // Cells that maybe are part of the solution
-    var possibleCandidates: [CellComponent, CellComponent, CellComponent, CellComponent,
-      CellComponent, CellComponent, CellComponent, CellComponent
+    var possibleCandidates: [
+      CellComponent,
+      CellComponent,
+      CellComponent,
+      CellComponent,
+      CellComponent,
+      CellComponent,
+      CellComponent,
+      CellComponent
     ];
-    possibleCandidates = [new CellComponent(-1, -1), new CellComponent(-1, -1),
-      new CellComponent(-1, -1), new CellComponent(-1, -1),
-      new CellComponent(-1, -1), new CellComponent(-1, -1),
-      new CellComponent(-1, -1), new CellComponent(-1, -1)
-    ]
+    possibleCandidates = [
+      new CellComponent(-1, -1),
+      new CellComponent(-1, -1),
+      new CellComponent(-1, -1),
+      new CellComponent(-1, -1),
+      new CellComponent(-1, -1),
+      new CellComponent(-1, -1),
+      new CellComponent(-1, -1),
+      new CellComponent(-1, -1),
+    ];
 
     // defining same directions, diagonal, vertical, diagonal, horizontal
     var allDirections = [
       [0, 4],
       [1, 5],
       [2, 6],
-      [3, 7]
+      [3, 7],
     ];
-
     var selectedRow = selectedCell.row;
     var selectedColumn = selectedCell.column;
 
     //Finding cell for 1 position:
     otherCells.forEach((cell) => {
-      if (cell.row == selectedRow - 1 &&
+      if (
+        cell.row == selectedRow - 1 &&
         cell.column == selectedColumn - 1 &&
-        cell.state == selectedCell.state) {
+        cell.state == selectedCell.state
+      ) {
         // First case => First position (Leftmost-top position)
         possibleCandidates[0] = cell;
-      } else if (cell.row == selectedRow - 1 &&
+      } else if (
+        cell.row == selectedRow - 1 &&
         cell.column == selectedColumn &&
-        cell.state == selectedCell.state) {
+        cell.state == selectedCell.state
+      ) {
         // Second case => Second position (Middle-top position)
         possibleCandidates[1] = cell;
-      } else if (cell.row == selectedRow - 1 &&
+      } else if (
+        cell.row == selectedRow - 1 &&
         cell.column == selectedColumn + 1 &&
-        cell.state == selectedCell.state) {
+        cell.state == selectedCell.state
+      ) {
         // Third case => Second position (Rightmost-top position)
         possibleCandidates[2] = cell;
-      } else if (cell.row == selectedRow &&
+      } else if (
+        cell.row == selectedRow &&
         cell.column == selectedColumn + 1 &&
-        cell.state == selectedCell.state) {
+        cell.state == selectedCell.state
+      ) {
         // Forth case => Rightmost-middle position)
         possibleCandidates[3] = cell;
-      } else if (cell.row == selectedRow + 1 &&
+      } else if (
+        cell.row == selectedRow + 1 &&
         cell.column == selectedColumn + 1 &&
-        cell.state == selectedCell.state) {
+        cell.state == selectedCell.state
+      ) {
         // Fifth case => Rightmost-low position)
         possibleCandidates[4] = cell;
-      } else if (cell.row == selectedRow + 1 &&
+      } else if (
+        cell.row == selectedRow + 1 &&
         cell.column == selectedColumn &&
-        cell.state == selectedCell.state) {
+        cell.state == selectedCell.state
+      ) {
         // Sixthe case => Middle, low position
         // console.log("Somehing wrong...");
         possibleCandidates[5] = cell;
-      } else if (cell.row == selectedRow + 1 &&
+      } else if (
+        cell.row == selectedRow + 1 &&
         cell.column == selectedColumn - 1 &&
-        cell.state == selectedCell.state) {
+        cell.state == selectedCell.state
+      ) {
         // Seven case => Leftmost, low position
         possibleCandidates[6] = cell;
-      } else if (cell.row == selectedRow &&
+      } else if (
+        cell.row == selectedRow &&
         cell.column == selectedColumn - 1 &&
-        cell.state == selectedCell.state) {
+        cell.state == selectedCell.state
+      ) {
         // Eight case => Leftmost, middle position
         possibleCandidates[7] = cell;
       } else {
         // do nothing
-
       }
-    })
-
+    });
     for (var i = 0; i < allDirections.length; i++) {
-
-      if (possibleCandidates[allDirections[i][0]].row != -1 || possibleCandidates[allDirections[i][1]].row != -1) {
+      if (
+        possibleCandidates[allDirections[i][0]].row != -1 ||
+        possibleCandidates[allDirections[i][1]].row != -1
+      ) {
         // If the placeholder of matching candidates is not null => have matche value
         var counter = 1;
         // Begin counter;
         // initialize second matched cell for the winning segment
         var nextCell = possibleCandidates[allDirections[i][0]];
-        var nextCellPlus = possibleCandidates[allDirections[i][1]]
+        var nextCellPlus = possibleCandidates[allDirections[i][1]];
 
         while (nextCell != null && nextCell.state == selectedCell.state) {
           counter = counter + 1;
-          nextCell = this.nextCellMatchResult(nextCell, allDirections[i][0], otherCells);
-        };
+          nextCell = this.nextCellMatchResult(
+            nextCell,
+            allDirections[i][0],
+            otherCells
+          );
+        }
 
-        while (nextCellPlus != null && nextCellPlus.state == selectedCell.state) {
+        while (
+          nextCellPlus != null &&
+          nextCellPlus.state == selectedCell.state
+        ) {
           counter = counter + 1;
-          nextCellPlus = this.nextCellMatchResult(nextCellPlus, allDirections[i][1], otherCells);
-        };
+          nextCellPlus = this.nextCellMatchResult(
+            nextCellPlus,
+            allDirections[i][1],
+            otherCells
+          );
+        }
 
         if (counter >= this.WIN_CONDITION) {
           // Counter reaches requires limit and nextcell.state is not belong to opponent
           //  console.log("VICTORY FOR YOU!!!!")
-          return true
+          return true;
         }
       }
     }
     return false;
   }
 
-  nextCellMatchResult(selectedCell: CellComponent, direction: number, otherCells: CellComponent[]): CellComponent {
-
+  nextCellMatchResult(
+    selectedCell: CellComponent,
+    direction: number,
+    otherCells: CellComponent[]
+  ): CellComponent {
     var OpponentCell: CellComponent[];
     if (selectedCell.state == Player.PLAYER_ONE) {
       OpponentCell = this.SecondPlayerCells;
@@ -305,49 +307,49 @@ export class DashboardComponent implements OnInit {
 
     switch (direction) {
       // direction one
-      case (0): {
+      case 0: {
         // first case
         nextCell.row = selectedCell.row - 1;
         nextCell.column = selectedCell.column - 1;
         break;
       }
-      case (1): {
+      case 1: {
         // Second case
         nextCell.row = selectedCell.row - 1;
         nextCell.column = selectedCell.column;
         break;
       }
-      case (2): {
+      case 2: {
         // Third case
         nextCell.row = selectedCell.row - 1;
         nextCell.column = selectedCell.column + 1;
         break;
       }
-      case (3): {
+      case 3: {
         // Forth case
         nextCell.row = selectedCell.row;
         nextCell.column = selectedCell.column + 1;
         break;
       }
-      case (4): {
+      case 4: {
         // Fifth case
         nextCell.row = selectedCell.row + 1;
         nextCell.column = selectedCell.column + 1;
         break;
       }
-      case (5): {
+      case 5: {
         // Second case
         nextCell.row = selectedCell.row + 1;
         nextCell.column = selectedCell.column;
         break;
       }
-      case (6): {
+      case 6: {
         // Second case
         nextCell.row = selectedCell.row + 1;
         nextCell.column = selectedCell.column - 1;
         break;
       }
-      case (7): {
+      case 7: {
         // Second case
         nextCell.row = selectedCell.row;
         nextCell.column = selectedCell.column - 1;
@@ -359,21 +361,60 @@ export class DashboardComponent implements OnInit {
       if (cell.row == nextCell.row && cell.column == nextCell.column) {
         nextCell = cell;
       }
-    })
+    });
 
     otherCells.forEach((cell) => {
       if (cell.row == nextCell.row && cell.column == nextCell.column) {
         nextCell = cell;
       }
-    })
+    });
     if (nextCell.state != 0) {
-      return nextCell
+      return nextCell;
     }
     return null;
   }
 
+  //WORKER LOGIC
+  initializeWebWorker() {
+    if (typeof Worker !== 'undefined') {
+      if (!this.aiWorker) {
+        this.aiWorker = new Worker('../../../assets/mtdf(10).worker.js', {
+          type: 'module',
+        });
+      }
+    }
+  }
 
-   // esto deberia ir en un servicio o algo
+  aiWorkerPost() {
+    var MaximumTimeForMove = 100;
+    this.aiWorker.postMessage([this.Board, -1, MaximumTimeForMove]);
+    this.aiWorker.addEventListener(
+      'message',
+      ({ data }) => {
+        this.selectCell(data.bestmove.i, data.bestmove.j);
+      },
+      { once: true }
+    );
+  }
+
+  //BUTTON FUNCTIONS
+  idea() {
+    var MaximumTimeForMove = 100;
+    this.aiWorker.postMessage([this.Board, 1, MaximumTimeForMove]);
+    this.aiWorker.addEventListener(
+      'message',
+      ({ data }) => {
+        var cell = document
+          .getElementById(data.bestmove.i + '_' + data.bestmove.j)
+          .getElementsByClassName('cell')[0];
+        cell.classList.add('idea');
+        setTimeout(function () {
+          cell.classList.remove('idea');
+        }, 700);
+      },
+      { once: true }
+    );
+  }
 
   restart() {
     this.stack = {};
@@ -388,23 +429,23 @@ export class DashboardComponent implements OnInit {
   }
 
   undo() {
-      this.count--;
-      const element = this.stack[this.count];
-      delete this.stack[this.count];
-      var i = element.i;
-      var j = element.j;
-      var selectedCell = this.findCorrectCell(i, j);
-      this.gameBoard[i][j] = new CellComponent(i, j);
+    this.count--;
+    const element = this.stack[this.count];
+    delete this.stack[this.count];
+    var i = element.i;
+    var j = element.j;
+    var selectedCell = this.findCorrectCell(i, j);
+    this.gameBoard[i][j] = new CellComponent(i, j);
 
-      if (selectedCell.state == 1) {
-        this.FirstPlayerCells.pop();
-      } else if (selectedCell.state == -1) {
-        this.SecondPlayerCells.pop();
-      }
-      selectedCell.changeState(Player.PLAYER_NONE);
-      this.winner = 0;
-      this.onGoing = true;
-      this.Board[i][j] = 0;
+    if (selectedCell.state == 1) {
+      this.FirstPlayerCells.pop();
+    } else if (selectedCell.state == -1) {
+      this.SecondPlayerCells.pop();
+    }
+    selectedCell.changeState(Player.PLAYER_NONE);
+    this.winner = 0;
+    this.onGoing = true;
+    this.Board[i][j] = 0;
   }
 
   push(selectedCell: any) {
@@ -412,32 +453,55 @@ export class DashboardComponent implements OnInit {
     this.count++;
   }
 
-  idea(){
-    var MaximumTimeForMove = 100;
-    this.aiWorker.postMessage([this.Board, 1, MaximumTimeForMove]);
-    this.aiWorker.addEventListener('message', ({data}) => {
-      var cell = document.getElementById(data.bestmove.i+"_"+data.bestmove.j).getElementsByClassName("cell")[0];
-      cell.classList.add("idea");
-      setTimeout(function(){cell.classList.remove("idea")}, 700)
-    }, {once: true});
-  }
-
   printAll() {
-    console.log("Board")
-    console.log(this.Board)
-    console.log("gameBoard")
-    console.log(this.gameBoard)
-    console.log("allCells")
-    console.log(this.allCells)
-    console.log("playerOneCells")
-    console.log(this.FirstPlayerCells)
-    console.log("playerTwoCells")
-    console.log(this.SecondPlayerCells)
-    console.log("onGoing")
-    console.log(this.onGoing)
-    console.log("winner")
-    console.log(this.winner)
+    console.log('Board');
+    console.log(this.Board);
+    console.log('gameBoard');
+    console.log(this.gameBoard);
+    console.log('allCells');
+    console.log(this.allCells);
+    console.log('playerOneCells');
+    console.log(this.FirstPlayerCells);
+    console.log('playerTwoCells');
+    console.log(this.SecondPlayerCells);
+    console.log('onGoing');
+    console.log(this.onGoing);
+    console.log('winner');
+    console.log(this.winner);
   }
 
 
+  //POPUP FUNCTIONS
+  openDialog(info: any){
+    this.dialogRef.open(DialogComponent, {
+      data:{
+        title: info[0],
+        secondTitle: info[1],
+        message: info[2],
+        buttons: info[3],
+        actions: info[4],
+        textClass: info[5]
+      }
+    });
+  }
+
+  openYouWinDialog(){
+    var info =["You Win!! :)", null, "Wanna play a New Game?", ["New Game", "Stay Here"], [], "xubio-text-success"]
+    this.openDialog(info);
+  }
+
+  openYouLooseDialog(){
+    var info =["You Loose :(", null, "Wanna play a New Game?", ["New Game", "Stay Here"], [], "xubio-text-danger"]
+    this.openDialog(info);
+  }
+
+  openDrawDialog(){
+    var info =["Tied!", null, "Wanna play a New Game?", ["New Game", "Stay Here"], []]
+    this.openDialog(info);
+  }
+
+  openInvalidMoveDialog(){
+    var info =["Invalid Move", null, "Try with another one", ["Ok", null], [], "xubio-text-warning"]
+    this.openDialog(info);
+  }
 }
