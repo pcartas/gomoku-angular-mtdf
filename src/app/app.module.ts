@@ -12,6 +12,7 @@ import { CellComponent } from './components/cell/cell.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { NavComponent } from './components/nav/nav.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 
 
@@ -22,7 +23,8 @@ import { NavComponent } from './components/nav/nav.component';
     NavComponent,
     DashboardComponent,
     CellComponent,
-    DialogComponent
+    DialogComponent,
+    FooterComponent
   ],
   imports: [
     BrowserModule,

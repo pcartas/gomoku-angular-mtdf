@@ -16,9 +16,11 @@ $xubio-secondary-help: #7F2D4E !default
 $xubio-background-grey: #EFF3F4 !default
 $xubio-white: #FFFFFF !default //cmon just white
 $xubio-footer-grey: #E2E2E2 !default
+$xubio-footer-grey-border: #d7d7d7 !default
 
 $xubio-primary-text: #191D1E !default
 $xubio-secondary-text: #4D575B !default
+$xubio-footer-text:  #a0a0a0 !default
 
 $xubio-red-error: #DB2A2A !default
 $xubio-orange-warning: #DB7F2A !default
@@ -47,11 +49,13 @@ $dark:          $xubio-primary-text !default
 // scss-docs-start theme-colors-map
 $theme-colors: ("primary": $primary, "secondary":  $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark) !default
 
+
+//BUTTONS
 button
-  height: 37px,
-  padding: 4px 12px 4px 12px,
-  border-radius: 4px,
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25)
+    // height: 21px,
+    padding: 4px 12px 4px 12px,
+    border-radius: 4px,
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25)
 
 
 .primaryButton
@@ -61,7 +65,7 @@ button
     font-weight: 600
 
 .primaryButton:hover
-  background: $xubio-gradient-2,
+    background: $xubio-gradient-2,
 
 
 .secondaryButton
@@ -82,14 +86,15 @@ button
     border: 1px solid #00abeb !important,
     font-weight: 700,
     border-radius: 4px,
-    font-size: 14px
+    font-size: 13px
+    font-family: "Open Sans", sans-serif !important
 
 .thirdButton:hover
-  border: 1px solid #027cd8 !important,
-  background: #027cd8
+    border: 1px solid #027cd8 !important,
+    background: #027cd8
 
 .infoButton
-    color: $xubio-white
+    font-size: 17px !important
     border: none !important,
     margin-left: 10px
     background: $xubio-gradient-pink
@@ -97,15 +102,21 @@ button
 .infoButton:hover
     background: $xubio-secondary-help
 
+//TEXT
 .xubio-text-success
-  color: $xubio-primary-light-green
+    color: $xubio-primary-light-green
 
 .xubio-text-warning
-  color: $xubio-orange-warning
+    color: $xubio-orange-warning
 
 .xubio-text-danger
-  color: $xubio-red-error
+    color: $xubio-red-error
 
+.text-xubio
+    color: $light,
+
+
+//DIALOG
 .xubio-dialog-title
     font-family: "Open Sans",
     font-size: 20px !important
@@ -124,10 +135,13 @@ button
     letter-spacing: 0em
     text-align: left
 
+//BANNER | HEADER
 .xubio-banner
     background: url('./assets/header_back.png') no-repeat center 0
     background-position: -810px 0
-    // width: 980px !important
+    background: url('./assets/header_back.svg') no-repeat center 0
+    // background-position: -810px 0
+    background-size: auto 53px
     height: 83px
 
 .xubio-header-menu
@@ -136,7 +150,6 @@ button
     border: none
     padding: 0
     background: $xubio-primary-light-blue
-
 
 .xubio-header-menu-text
     text: $xubio-white
@@ -151,7 +164,35 @@ button
     text-indent: -1000px
     margin: 11px
 
+//FOOTER
+.xubio-footer
+    max-height: 66px
+    width: 100%
+    background: $xubio-primary-light-blue
+    margin-top: 25px
+    padding: 25px 0 40px 10px
+    border-top: 1px solid $xubio-extended-light-blue-2
+    // position: relative
+    // bottom: 0vh
+    // // left: 0
 
+.xubio-footer-text
+    text-align: left
+    font-size: 12px
+    line-height: 18px
+    color: $xubio-white
+    font-weight: 400
+    font-family: 'Open Sans', sans-serif !important
+
+
+
+
+.idea
+  background: $xubio-primary-help !important
+
+
+
+//HTML
 html
     height: 100%,
 
@@ -159,44 +200,4 @@ body
     margin: 0
     font-family: Circe, Open Sans, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
     height: 100%
-    background-color: $xubio-background-grey,
-
-// Text
-.text-xubio
-    color: $light,
-
-
-// Dashboard
-.table-panel
-    margin-top: 3rem,
-
-.numberGrid
-    height: 2rem,
-    width: 2rem,
-    background-color: $xubio-primary-light-blue,
-    color: $light,
-    float: left,
-    margin: 0 2px 2px 0,
-    text-align: center,
-    font-weight: 600
-    border-radius: 4px
-p
-  margin-top: 0.5rem !important,
-
-.cell
-    height: 2rem,
-    width: 2rem,
-    float: left,
-    margin: 0 2px 2px 0,
-
-.cell:hover
-        background: $xubio-background-grey
-
-.idea
-  background: $xubio-primary-help
-
-
-
-
-// .idea:hover
-//   background: $xubio-gradient-1
+    background: $xubio-primary-blue

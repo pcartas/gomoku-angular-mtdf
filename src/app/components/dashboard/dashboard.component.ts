@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 
-import { CellComponent } from '../cell/cell.component';
-import { Player } from '../../player_enum';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+
+import { CellComponent } from '../cell/cell.component';
 import { DialogComponent } from '../dialog/dialog.component';
+import { Player } from '../../player_enum';
+import { callbackify } from 'util';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -22,22 +24,29 @@ import { DialogComponent } from '../dialog/dialog.component';
   ],
 })
 export class DashboardComponent implements OnInit {
-  // The worker that im gonna use to interact with the AI
+  //AI Worker variables
   public aiWorker: any;
+  private MaximumTimeForMove = 200;
+  //Game Variables
+  public onGoing: boolean = true;
   private WIN_CONDITION: number = 5;
   public winner: Player = Player.PLAYER_NONE;
+  //Player Variables
   private FirstPlayerCells: CellComponent[] = [];
   private SecondPlayerCells: CellComponent[] = [];
   public lastPlayer: Player;
   public CurrentPlayer: Player;
+  //Board array && Board CellComponent
+  private tableSize = 15;
   public gameBoard;
   public Board = [];
-  //Undo variables
+  //Undo & Redo variables
   private stack = {};
   private count = 0;
-  // GameProgress:
-  public onGoing: boolean = true;
-  // ViewChild to query Cell
+  private redoStack = {};
+  private redoCount = 0;
+
+  //ViewChild to query Cell
   @ViewChildren(CellComponent) allCells: QueryList<CellComponent>;
 
   constructor(private dialogRef: MatDialog) {}
@@ -52,13 +61,12 @@ export class DashboardComponent implements OnInit {
   //DASHBOARD FUNCTIONS
 
   newGameState(): any {
-    // Making up a 15x15 dashboard where each cell is a CellComponent
-    var size = 15;
+    // Making up a NxN dashboard where each cell is a CellComponent
     let newGameState: CellComponent[][] = [];
-    for (var i: number = 0; i < size; i++) {
+    for (var i: number = 0; i < this.tableSize; i++) {
       newGameState[i] = [];
       this.Board[i] = [];
-      for (var j: number = 0; j < size; j++) {
+      for (var j: number = 0; j < this.tableSize; j++) {
         newGameState[i][j] = new CellComponent(i, j);
         this.Board[i][j] = newGameState[i][j].state;
       }
@@ -386,11 +394,15 @@ export class DashboardComponent implements OnInit {
   }
 
   aiWorkerPost() {
-    var MaximumTimeForMove = 100;
-    this.aiWorker.postMessage([this.Board, -1, MaximumTimeForMove]);
+    this.aiWorker.postMessage([this.Board, -1, this.MaximumTimeForMove]);
     this.aiWorker.addEventListener(
       'message',
       ({ data }) => {
+        // console.log('best move');
+        // console.log(data.bestmove);
+        // console.log(`Call to iterative mtdf took ${data.time} seconds.`);
+        // console.log('first moves')
+        // console.log(data.firstMoves);
         this.selectCell(data.bestmove.i, data.bestmove.j);
       },
       { once: true }
@@ -398,9 +410,9 @@ export class DashboardComponent implements OnInit {
   }
 
   //BUTTON FUNCTIONS
+  //The buttons should be another component
   idea() {
-    var MaximumTimeForMove = 100;
-    this.aiWorker.postMessage([this.Board, 1, MaximumTimeForMove]);
+    this.aiWorker.postMessage([this.Board, 1, this.MaximumTimeForMove]);
     this.aiWorker.addEventListener(
       'message',
       ({ data }) => {
@@ -451,6 +463,11 @@ export class DashboardComponent implements OnInit {
   push(selectedCell: any) {
     this.stack[this.count] = selectedCell;
     this.count++;
+
+  }
+
+  redo(){
+
   }
 
   printAll() {
@@ -472,6 +489,7 @@ export class DashboardComponent implements OnInit {
 
 
   //POPUP FUNCTIONS
+  //This should be implemented on a service
   openDialog(info: any){
     this.dialogRef.open(DialogComponent, {
       data:{
@@ -482,21 +500,25 @@ export class DashboardComponent implements OnInit {
         actions: info[4],
         textClass: info[5]
       }
+    }).afterClosed().subscribe(results => {
+      if(typeof results === 'function'){
+        results.call(this)
+      }
     });
   }
 
   openYouWinDialog(){
-    var info =["You Win!! :)", null, "Wanna play a New Game?", ["New Game", "Stay Here"], [], "xubio-text-success"]
+    var info =["You Win!! :)", null, "Wanna play a New Game?", ["New Game", "Stay Here"], [this.restart], "xubio-text-success"]
     this.openDialog(info);
   }
 
   openYouLooseDialog(){
-    var info =["You Loose :(", null, "Wanna play a New Game?", ["New Game", "Stay Here"], [], "xubio-text-danger"]
+    var info =["You Loose :(", null, "Wanna play a New Game?", ["New Game", "Stay Here"], [this.restart], "xubio-text-danger"]
     this.openDialog(info);
   }
 
   openDrawDialog(){
-    var info =["Tied!", null, "Wanna play a New Game?", ["New Game", "Stay Here"], []]
+    var info =["Tied!", null, "Wanna play a New Game?", ["New Game", "Stay Here"], [this.restart]]
     this.openDialog(info);
   }
 
