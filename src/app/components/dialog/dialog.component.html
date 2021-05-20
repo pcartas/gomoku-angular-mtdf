@@ -1,0 +1,10 @@
+<div class={{this.textClass}} >
+  <h1 class="xubio-dialog-title">{{this.title}}</h1>
+</div>
+<div class={{this.textClass}} mat-dialog-content *ngIf="this.secondTitle !== null"><h2>{{this.secondTitle}}</h2></div>
+<div class={{this.textClass}} ><h2 class="xubio-dialog-message">{{this.message}}</h2></div>
+
+<div mat-dialog-actions fxLayoutAlign="end end">
+  <button class="primaryButton" style="border: 0px !important" (click)="button1Click()" [mat-dialog-close]="data.actions">{{this.button1}}</button>
+  <button class="secondaryButton" [mat-dialog-close]="true" *ngIf="this.button2 !== null">{{this.button2}}</button>
+</div>

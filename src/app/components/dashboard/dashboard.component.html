@@ -1,0 +1,54 @@
+<!--BUTTON SECTION -->
+<div class="dashboard">
+  <div class="mt-2" fxLayout="row" fxLayoutAlign="start start">
+    <button class="thirdButton" (click)="restart()">Restart</button>
+    <button class="thirdButton" (click)="undo(); undo()">Undo</button>
+    <button class="thirdButton">Redo</button>
+    <!-- <button (click)="printAll()">PrintAll</button> -->
+    <button class="infoButton" (click)="idea()">
+      <span class="material-icons text-white size-18"> wb_incandescent</span>
+    </button>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="space-around center">
+    <!-- DASHBOARD SECTION -->
+    <div class="mt-2" fxLayout="column" fxLayoutAlign="center center">
+      <div fxLayout="row">
+        <div *ngFor="let row of this.gameBoard; let i = index">
+          <div class="numberGrid">
+            <p class="p">{{ i + 1 }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="table-panel m-0 p-0">
+        <div
+          fxLayout="row"
+          fxLayoutAlign="center center"
+          *ngFor="let row of this.gameBoard; let i = index"
+        >
+          <div class="numberGrid">
+            <p class="p">{{ i + 1 }}</p>
+          </div>
+          <app-cell
+            *ngFor="let column of row; let j = index"
+            [row]="i"
+            [column]="j"
+            (click)="selectCell(i, j)"
+            id="{{ i }}_{{ j }}"
+            #cell
+          >
+          </app-cell>
+          <div class="numberGrid">
+            <p class="p">{{ i + 1 }}</p>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="row">
+        <div *ngFor="let row of this.gameBoard; let i = index">
+          <div class="numberGrid">
+            <p class="p">{{ i + 1 }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,203 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~@angular/material/prebuilt-themes/indigo-pink.css"
+
+$xubio-primary-blue: #004874 !default
+$xubio-primary-light-green: #71E247 !default
+$xubio-primary-light-blue: #0075B0 !default
+$xubio-extended-light-blue-1: #00AFD3 !default
+$xubio-extended-light-blue-2: #006D7C !default
+$xubio-extended-light-green: #52AE32 !default
+$xubio-extended-green: #336620 !default
+$xubio-extended-dark-blue: #0F3547 !default
+
+$xubio-primary-help: #D24379 !default
+$xubio-secondary-help: #7F2D4E !default
+
+$xubio-background-grey: #EFF3F4 !default
+$xubio-white: #FFFFFF !default //cmon just white
+$xubio-footer-grey: #E2E2E2 !default
+$xubio-footer-grey-border: #d7d7d7 !default
+
+$xubio-primary-text: #191D1E !default
+$xubio-secondary-text: #4D575B !default
+$xubio-footer-text:  #a0a0a0 !default
+
+$xubio-red-error: #DB2A2A !default
+$xubio-orange-warning: #DB7F2A !default
+$xubio-green-success: #52AE32 !default
+$xubio-yellow-info: #DBCE2A !default
+
+$xubio-gradient-1: linear-gradient(331.7deg, #004874 35%, #00AFD3 88.87%)
+$xubio-gradient-2: linear-gradient(45deg, #0F3547 15.51%, #004874 84.49%)
+$xubio-gradient-3: linear-gradient(to bottom, #00abeb 0%,#027cd8 100%)
+$xubio-gradient-4: linear-gradient(to bottom, #007dbf 0%,#174db1 100%)
+$xubio-gradient-pink: linear-gradient(to bottom, $xubio-primary-help 0%, $xubio-secondary-help 100%)
+$colors: ("blue": $xubio-primary-blue, "purple": $xubio-secondary-help, "pink": $xubio-primary-help, "red": $xubio-red-error, "orange": $xubio-orange-warning, "yellow": $xubio-yellow-info,"green": $xubio-primary-light-green, "cyan": $xubio-extended-light-blue-1, "white": $xubio-white, "gray": $xubio-secondary-text, "gray-dark":  $xubio-primary-text) !default
+// scss-docs-end colors-map
+
+// scss-docs-start theme-color-variables
+$primary:       $xubio-primary-blue !default
+$secondary:     $xubio-primary-light-green !default
+$success:       $xubio-green-success !default
+$info:          $xubio-yellow-info !default
+$warning:       $xubio-orange-warning !default
+$danger:        $xubio-red-error !default
+$light:         $xubio-white !default
+$dark:          $xubio-primary-text !default
+// scss-docs-end theme-color-variables
+
+// scss-docs-start theme-colors-map
+$theme-colors: ("primary": $primary, "secondary":  $secondary, "success": $success, "info": $info, "warning": $warning, "danger": $danger, "light": $light, "dark": $dark) !default
+
+
+//BUTTONS
+button
+    // height: 21px,
+    padding: 4px 12px 4px 12px,
+    border-radius: 4px,
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25)
+
+
+.primaryButton
+    color: $light,
+    background: $xubio-gradient-1,
+    border: 0px !important,
+    font-weight: 600
+
+.primaryButton:hover
+    background: $xubio-gradient-2,
+
+
+.secondaryButton
+    margin-left: 10px,
+    color: $xubio-primary-blue,
+    background: $xubio-white,
+    border: 0.5px solid $xubio-primary-blue,
+    box-sizing: border-box,
+    border-radius: 4px
+
+.secondaryButton:hover
+    background: $xubio-background-grey
+
+.thirdButton
+    margin-left: 10px
+    color: $light,
+    background: $xubio-gradient-3,
+    border: 1px solid #00abeb !important,
+    font-weight: 700,
+    border-radius: 4px,
+    font-size: 13px
+    font-family: "Open Sans", sans-serif !important
+
+.thirdButton:hover
+    border: 1px solid #027cd8 !important,
+    background: #027cd8
+
+.infoButton
+    font-size: 17px !important
+    border: none !important,
+    margin-left: 10px
+    background: $xubio-gradient-pink
+
+.infoButton:hover
+    background: $xubio-secondary-help
+
+//TEXT
+.xubio-text-success
+    color: $xubio-primary-light-green
+
+.xubio-text-warning
+    color: $xubio-orange-warning
+
+.xubio-text-danger
+    color: $xubio-red-error
+
+.text-xubio
+    color: $light,
+
+
+//DIALOG
+.xubio-dialog-title
+    font-family: "Open Sans",
+    font-size: 20px !important
+    font-style: normal !important
+    font-weight: 600
+    line-height: 27px
+    letter-spacing: 0em
+    text-align: left
+
+.xubio-dialog-message
+    font-family: Open Sans
+    font-size: 14px !important
+    font-style: normal !important
+    font-weight: 400
+    line-height: 19px !important
+    letter-spacing: 0em
+    text-align: left
+
+//BANNER | HEADER
+.xubio-banner
+    background: url('./assets/header_back.png') no-repeat center 0
+    background-position: -810px 0
+    background: url('./assets/header_back.svg') no-repeat center 0
+    // background-position: -810px 0
+    background-size: auto 53px
+    height: 83px
+
+.xubio-header-menu
+    height: 30px
+    width: 100%
+    border: none
+    padding: 0
+    background: $xubio-primary-light-blue
+
+.xubio-header-menu-text
+    text: $xubio-white
+    font-weight: 600
+    font-size: 14px
+    padding: 5px 14px 6px 14px
+
+.xubio-logo
+    background: url('./assets/logo_xubio_2017.png')
+    height: 31px
+    width: 119px
+    text-indent: -1000px
+    margin: 11px
+
+//FOOTER
+.xubio-footer
+    max-height: 66px
+    width: 100%
+    background: $xubio-primary-light-blue
+    margin-top: 25px
+    padding: 25px 0 40px 10px
+    border-top: 1px solid $xubio-extended-light-blue-2
+    // position: relative
+    // bottom: 0vh
+    // // left: 0
+
+.xubio-footer-text
+    text-align: left
+    font-size: 12px
+    line-height: 18px
+    color: $xubio-white
+    font-weight: 400
+    font-family: 'Open Sans', sans-serif !important
+
+
+
+
+.idea
+  background: $xubio-primary-help !important
+
+
+
+//HTML
+html
+    height: 100%,
+
+body
+    margin: 0
+    font-family: Circe, Open Sans, Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    height: 100%
+    background: $xubio-primary-blue
