@@ -1,13 +1,21 @@
 <!--BUTTON SECTION -->
 <div class="dashboard">
-  <div class="mt-2" fxLayout="row" fxLayoutAlign="start start">
-    <button class="thirdButton" (click)="restart()">Restart</button>
-    <button class="thirdButton" (click)="undo(); undo()">Undo</button>
-    <button class="thirdButton" (click)="redo(); redo()">Redo</button>
-    <!-- <button (click)="printAll()">PrintAll</button> -->
+  <div class="mt-2" fxLayout="row" fxLayoutAlign="space-between start">
     <button class="infoButton" (click)="idea()">
       <span class="material-icons text-white size-18"> wb_incandescent</span>
     </button>
+    <div>
+      <button class="thirdButton" (click)="undo(); undo()">Undo</button>
+      <button class="thirdButton" (click)="redo(); redo()">Redo</button>
+    </div>
+
+    <div class="margin-right">
+      <button class="thirdButton" (click)="restart()">Restart</button>
+      <button class="thirdButton" (click)="set15x15()">Set 15x15</button>
+      <button class="thirdButton" (click)="set19x19()">Set 19x19</button>
+      <button class="thirdButton" (click)="vsAI()">AI mode</button>
+    </div>
+    <!-- <button (click)="printAll()">PrintAll</button> -->
   </div>
   <div fxLayout="row" fxLayoutAlign="space-around center">
     <!-- DASHBOARD SECTION -->

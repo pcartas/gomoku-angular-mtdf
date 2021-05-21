@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-
 import { MatDialog } from '@angular/material/dialog';
 
 import { CellComponent } from '../cell/cell.component';
@@ -30,7 +29,7 @@ export class DashboardComponent implements OnInit {
   private onGoing: boolean = true;
   private WIN_CONDITION: number = 5;
   private winner: Player = Player.PLAYER_NONE;
-  private startPlayer = Player.PLAYER_TWO;
+  private startPlayer = Player.PLAYER_ONE;
   private iavsia = false;
   //Player Variables
   private FirstPlayerCells: CellComponent[] = [];
@@ -479,6 +478,28 @@ export class DashboardComponent implements OnInit {
     console.log(this.winner);
   }
 
+  vsAI(){
+    if(this.iavsia == true){
+      this.iavsia = false;
+    } else {
+      this.iavsia = true;
+      if(this.CurrentPlayer== Player.PLAYER_ONE){
+        this.aiWorkerPost(Player.PLAYER_ONE);
+      } else {
+        this.aiWorkerPost(Player.PLAYER_TWO);
+      }
+    }
+  }
+
+  set15x15(){
+    this.tableSize = 15;
+    this.ngOnInit();
+  }
+
+  set19x19(){
+    this.tableSize = 19;
+    this.ngOnInit();
+  }
 
   //POPUP FUNCTIONS
   //This should be implemented on a service
