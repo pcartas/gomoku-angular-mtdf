@@ -7,6 +7,6 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Disclaimer
-I based my project on one existing project, that implements mtdf(10) algorithm for the same game
+I based the AI on the AI of one existing project, that implements mtdf(10) algorithm for the same game
 here is the link:
 https://github.com/qwertyforce/gomoku_ai
